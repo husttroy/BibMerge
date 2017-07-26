@@ -41,9 +41,6 @@ public class BibMerge {
 			String article = "";
 			String label = null;
 			for(String l : ls) {
-				if(l.equals("fowler:refactor99")) {
-					System.out.println("yeh");
-				}
 				String content = this.articles.get(l);
 				if(content.length() > article.length()) {
 					// we prefer longer bib for the same article
@@ -70,9 +67,6 @@ public class BibMerge {
 					// duplicated
 					for(String l : ls) {
 						if(!l.equals(label)) {
-							if(l.equals("fowler:refactor99")) {
-								System.out.println("yeh");
-							}
 							// replace the references to duplicated bib records
 							// be careful when replacing them, because one ref can be a substring of another
 							// just enumerate all cases
@@ -92,9 +86,6 @@ public class BibMerge {
 	
 	private void load() {
 		for(String bib : bibs) {
-			if(bib.equals("/home/troy/research/software_evolution_chapter/refs-wong.bib")) {
-				System.out.println("yeh");
-			}
 			load(bib);
 		}
 	}
