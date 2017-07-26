@@ -9,6 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 public class BibMerge {
 	ArrayList<String> bibs;
 	ArrayList<String> texs;
@@ -173,30 +180,48 @@ public class BibMerge {
 	
 	
 	public static void main(String[] args) {
+		CommandLineParser parser = new DefaultParser();
 		
+		Options options = new Options();
+		options.addOption("b", "bib", true, "list all bib files you want to merge, separated by :");
+		options.addOption("t", "tex", true, "list all tex files you want to update, separated by :");
+		options.addOption("o", "output", true, "specify the output file of merged bib entries, default is merged.bib in the current directory");
+		options.addOption("h", "help", false, "print this message");
 		
-		ArrayList<String> bibs = new ArrayList<String>();
-		bibs.add("/home/troy/research/software_evolution_chapter/chime.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/everton.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/faultracer.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/kim.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/kimrefactor.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/kimthesis.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/libsync.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/libsync2.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/mengna.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/miryung.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/reference.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/refs-kim.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/refs-wong.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/repair.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/spa.bib");
-		bibs.add("/home/troy/research/software_evolution_chapter/tianyi.bib");
+		try {
+			CommandLine line = parser.parse( options, args );
+			if(line.hasOption("h")) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("BibMerge", options);
+			} else if(!line.hasOption("b") || !line.hasOption("t")) {
+				System.out.println("Usage: java -jar edu.ucla.cs.bib.merge.BibMerge -b bib1:bib2 -t tex1:tex2 [-o output]");
+			} else {
+				String b = line.getOptionValue("b");
+				String[] bs = b.split(":");
+				ArrayList<String> bibs = new ArrayList<String>();
+				for(String bib : bs) {
+					bibs.add(bib);
+				}
+				
+				String t = line.getOptionValue("t");
+				String[] ts = t.split(":");
+				ArrayList<String> texs = new ArrayList<String>();
+				for(String tex : ts) {
+					texs.add(tex);
+				}
+				
+				String dest = line.getOptionValue("o");
+				
+				if(dest == null) {
+					dest = "./merged.bib";
+				}
+				
+				BibMerge bm = new BibMerge(bibs, texs);
+				bm.merge(dest);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		
-		ArrayList<String> texs = new ArrayList<String>();
-		texs.add("/home/troy/research/software_evolution_chapter/bookchapter.tex");
-		
-		BibMerge bm = new BibMerge(bibs, texs);
-		bm.merge("/home/troy/research/software_evolution_chapter/chapter.bib");
 	}
 }
