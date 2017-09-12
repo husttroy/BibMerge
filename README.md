@@ -11,7 +11,7 @@ However, BibMerge does not fix broken entries in the original bib files. So you 
 To run BibMerge,
 
 ```bash
-java -jar bibmerge edu.ucla.cs.bib.merge.BibMerge -b bib1:bib2 -t tex1:tex2 [-o output]
+java -jar bibmerge.jar edu.ucla.cs.bib.merge.BibMerge -b bib1:bib2 -t tex1:tex2 [-o output]
 ```
 usage: BibMerge
  -b,--bib <arg>      list all bib files you want to merge, separated by :
